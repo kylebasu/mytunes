@@ -29,6 +29,10 @@ var SongQueueView = Backbone.View.extend({
     this.$el.children().detach();
 
     this.$el.html('<th>Queue</th>');
+
+    this.collection.forEach(function(song) {
+      this.enqueueSong(song);
+    }.bind(this));
   },
 
   // Enqueues a song to the list

@@ -20,24 +20,15 @@ var AppModel = Backbone.Model.extend({
     // Set up two new instances of currentSong and songQueue on our app model
     this.set('currentSong', new SongModel());
     this.set('songQueue', new SongQueue());
-    
-    var isPlaying = false;
 
     // Listen for the play event on the library (gets fired on collection as well as model)
     params.library.on('play', function(song) {
-      if(!isPlaying) {
-        this.set('currentSong', song);
-        isPlaying = true;
-      }
+      this.set('currentSong', song);
     }, this);
 
     // Listen for the enqueue event on the library (gets fired on collection as well as model)
     params.library.on('enqueue', function(song) {
       this.get('songQueue').add(song);
-    }, this);
-
-    params.library.on('ended', function(song) {
-      isPlaying = false;
     }, this);
   }
 
