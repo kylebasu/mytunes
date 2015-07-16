@@ -20,17 +20,15 @@ var AppModel = Backbone.Model.extend({
     // Set up two new instances of currentSong and songQueue on our app model
     this.set('currentSong', new SongModel());
     this.set('songQueue', new SongQueue());
+    
+    var isPlaying = false;
 
     // Listen for the play event on the library (gets fired on collection as well as model)
     params.library.on('play', function(song) {
-      this.set('currentSong', song);
-    }, this);
-
-    // Listen for the ended event on the library (gets fired on collection as well as model)
-    params.library.on('ended', function(song){
-      this.get('songQueue').playFirst();
-      
-      // this.get('songQueue').at(0).dequeue();
+      if(!isPlaying) {
+        this.set('currentSong', song);
+        isPlaying = true;
+      }
     }, this);
 
     // Listen for the enqueue event on the library (gets fired on collection as well as model)
@@ -38,9 +36,8 @@ var AppModel = Backbone.Model.extend({
       this.get('songQueue').add(song);
     }, this);
 
-    // Listen for the dequeue event on the library (gets fired on collection as well as model)
-    params.library.on('dequeue', function(song) {
-      this.get('songQueue').remove(song);
+    params.library.on('ended', function(song) {
+      isPlaying = false;
     }, this);
   }
 
